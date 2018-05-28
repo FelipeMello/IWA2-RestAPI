@@ -1,0 +1,10 @@
+We are going to need two controllers. Each endpoint has different requirements but all
+endpoints share the following set of common requirements:
+● In all your controllers, the inputs of each endpoint should be validated and an error
+HTTP 400 (Bad Request) should be returned if the inputs are invalid.
+● If an exception takes place an error HTTP 500 (Internal Server Error) should be
+returned.
+● When an user doesn't have permissions to perform an operation, an error HTTP 403
+(Forbidden) should be returned.
+● When a request tries to access a private endpoint without a known identity, an error
+HTTP 401 (Unauthorized) should be returned.
