@@ -3,15 +3,15 @@
  * 
  */
 import { createConnection } from "typeorm";
-//import { Movie } from "./entities/movie";
-import { Link }  from "./backend/entities/link"
-import {User } from "./backend/entities/user";
-import {Vote } from "./backend/entities/vote";
+import { Link }  from "./entities/link"
+import {User } from "./entities/user";
+import {Vote } from "./entities/vote";
+
 export async function connecToDatabase() {
 
     const DATABASE_HOST = process.env.DATABASE_HOST || "localhost";
     const DATABASE_USER = process.env.DATABASE_USER || "I am the root";
-    const DATABASE_PORT = 3306;
+    const DATABASE_PORT = 3009;
     const DATABASE_PASSWORD = process.env.DATABASE_PASSWORD || "xxxxxxx";
     const DATABASE_DB = "test";
 

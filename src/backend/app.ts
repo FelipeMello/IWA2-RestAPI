@@ -1,5 +1,16 @@
 import express from "express";
-import { getLinkRouter } from "./backend/controllers/link_controller";
+import * as bodyParser from "body-parser";
+import {getUserRepository} from "./repositories/user_repository";
+import {getLinkRepository} from "./repositories/link_repository";
+import {getVoteRepository} from "./repositories/vote_repository";
+import {getLinksController} from "./controllers/link_controller";
+import {getUserController} from "./controllers/user_controller";
+import {getAuthController} from "./controllers/auth_controller";
+import {connecToDatabase} from "./db";
+
+
+
+
 /**
  * GET retrieves a representation of the resource at the specified URI. The body
 of the response message contains the details of the requested resource.
@@ -14,12 +25,35 @@ the set of changes to apply to the resource.
  */
 
 export async function getApp() {
-    const app = express();
-    app.get("/api/v1/links", getLinkRouter()); //GET
-    app.post("api/v1/links", getLinkRouter());   //POST
-    app.delete("api/v1/links/:id", getLinkRouter());   //DELETE
 
-    app.use("api/v1/link/:id/upvote", getLinkRouter()); //UPVOTE LINK
-    app.use("api/v1/link/:id/downvote", getLinkRouter()); //DOWNVOTE LINK
+    //connect ot db
+    await connecToDatabase();
+
+    //App
+    const app = express();
+
+    //Middleware
+    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({extended: true}));
+
+    //Repositories
+    const userRepository = getUserRepository();
+    const linkRepository = getLinkRepository();
+    const voteRepository = getVoteRepository();
+
+    //Controllers
+    const authController = getAuthController(userRepository);
+    const usersController = getUserController(userRepository);
+    const linksController = getLinksController(linkRepository, voteRepository);
+
+    //Routes
+    app.get("/", (req, res) =>{
+        res.send("Server is running ! Rest API");
+    });
+
+    app.use("/api/v1/links", usersController);
+    app.use("api/v1/links", linksController); 
+    app.use("api/v1/auth",authController);
+
     return app;
 }
